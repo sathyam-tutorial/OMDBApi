@@ -1,6 +1,11 @@
+ext {
+    group = 'mobile.customers.data.simple-mobile-app'
+    appVersion = '1.0-SNAPSHOT'
+    groupId = group
+    artifactId = 'simple-mobile-app'
+}
 buildscript {
-    group 'simple-mobile-app'
-    version '1.0-SNAPSHOT'
+
     repositories {
         jcenter()
     }
@@ -13,34 +18,66 @@ buildscript {
 allprojects {
     apply plugin: "com.jfrog.artifactory"
     apply plugin: "java"
+    apply plugin: 'ivy-publish'
+    apply plugin: "com.jfrog.artifactory"
 }
+    task mobileAppJar(type: Jar) {
+        manifest {
+            attributes 'Implementation-Title': 'Gradle Jar File for Mobile App',
+                    'Implementation-Version': appVersion,
+                    'Main-Class': 'mobile.customers.data'
+            from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+            with jar
+        }
+    }
 
-artifactory {
-    contextUrl = "http://localhost:8081/artifactory"   //The base Artifactory URL if not overridden by the publisher/resolver
+    artifactory {
+        contextUrl = "http://localhost:8081/artifactory"   //The base Artifactory URL if not overridden by the publisher/resolver
+
     publish {
-        repository {
-            repoKey = 'gradle-dev-local'
-            username = "${artifactory_user}"
-            password = "${artifactory_password}"
-            maven = false
-            ivy {
-                ivyLayout = '[organization]/[module]/ivy-[revision].xml'
-                artifactLayout = '[organization]/[module]/[revision]/[module]-[revision](-[classifier]).[ext]'
-                mavenCompatible = false
+            repository {
+                repoKey = 'gradle-dev-local'
+                url "http://localhost:8081/artifactory/gradle-dev-local"
+                username = "sathya"
+                password = "APBNTbQ4YbAsmwdYcCdu2EGPn4n"
+                maven = false
+                ivy {
+                    ivyLayout = '[organization]/[module]/ivy-[revision].xml'
+                    artifactLayout = '[organization]/[module]/[revision]/[module]-[revision](-[classifier]).[ext]'
+                    mavenCompatible = false
+                }
+            }
+        }
+        resolve {
+            repository {
+                repoKey = 'gradle-dev'
+                url = "http://localhost:8081/artifactory/gradle-dev"
+                username = "sathya"
+                password = "APBNTbQ4YbAsmwdYcCdu2EGPn4n"
+                maven = false
+                ivy {
+                    ivyLayout = '[organization]/[module]/ivy-[revision].xml'
+                    artifactLayout = '[organization]/[module]/[revision]/[module]-[revision](-[classifier]).[ext]'
+                    mavenCompatible = false
+                }
+            }
+        }
+
+    }
+
+    publishing {
+        publications {
+            pluginArtifact(IvyPublication) {
+                from components.java
+                artifact("$buildDir/libs/$artifactId.jar")
             }
         }
     }
-    resolve {
-        repository {
-            repoKey = 'gradle-dev'
-            username = "${artifactory_user}"
-            password = "${artifactory_password}"
-            maven = false
-            ivy {
-                ivyLayout = '[organization]/[module]/ivy-[revision].xml'
-                artifactLayout = '[organization]/[module]/[revision]/[module]-[revision](-[classifier]).[ext]'
-                mavenCompatible = false
-            }
+
+    artifactoryPublish {
+        publications(publishing.publications.pluginArtifact)
+        properties {
+            simpleFile '**:**:**:*@*', simpleFile: 'only on settings file'
         }
     }
-}
+
