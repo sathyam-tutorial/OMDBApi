@@ -1,9 +1,3 @@
-ext {
-    group = 'mobile.customers.data.simple-mobile-app'
-    appVersion = '1.0-SNAPSHOT'
-    groupId = group
-    artifactId = 'simple-mobile-app'
-}
 buildscript {
 
     repositories {
@@ -16,18 +10,24 @@ buildscript {
 }
 
 allprojects {
-    apply plugin: "com.jfrog.artifactory"
     apply plugin: "java"
-    apply plugin: 'ivy-publish'
+    apply plugin: 'maven-publish'
     apply plugin: "com.jfrog.artifactory"
 }
+
+/*ext {
+    group = 'mobile.customers.data'
+    version = '1.0-SNAPSHOT'
+    groupId = group
+    artifactId = 'simple-mobile-app'
+} */
     task mobileAppJar(type: Jar) {
         manifest {
             attributes 'Implementation-Title': 'Gradle Jar File for Mobile App',
-                    'Implementation-Version': appVersion,
+
                     'Main-Class': 'mobile.customers.data'
-            from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-            with jar
+            //from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+            //with jar
         }
     }
 
@@ -37,15 +37,18 @@ allprojects {
     publish {
             repository {
                 repoKey = 'gradle-dev-local'
-                url "http://localhost:8081/artifactory/gradle-dev-local"
+                url = "http://localhost:8081/artifactory/gradle-dev-local"
                 username = "sathya"
                 password = "APBNTbQ4YbAsmwdYcCdu2EGPn4n"
                 maven = false
                 ivy {
-                    ivyLayout = '[organization]/[module]/ivy-[revision].xml'
-                    artifactLayout = '[organization]/[module]/[revision]/[module]-[revision](-[classifier]).[ext]'
+                    ivyLayout = '[organization]/[artifactId]/ivy-[version].xml'
+                    artifactLayout = '[organization]/[artifactId]/[version]/[artifactId]-[version](-[classifier]).[ext]'
                     mavenCompatible = false
                 }
+            }
+            defaults {
+                publications('mavenJava')
             }
         }
         resolve {
@@ -56,8 +59,8 @@ allprojects {
                 password = "APBNTbQ4YbAsmwdYcCdu2EGPn4n"
                 maven = false
                 ivy {
-                    ivyLayout = '[organization]/[module]/ivy-[revision].xml'
-                    artifactLayout = '[organization]/[module]/[revision]/[module]-[revision](-[classifier]).[ext]'
+                    ivyLayout = '[organization]/[artifactId]/ivy-[version].xml'
+                    artifactLayout = '[organization]/[artifactId]/[version]/[artifactId]-[version](-[classifier]).[ext]'
                     mavenCompatible = false
                 }
             }
@@ -67,17 +70,20 @@ allprojects {
 
     publishing {
         publications {
-            pluginArtifact(IvyPublication) {
+            mavenJava(MavenPublication) {
+                group = 'mobile.customers.data'
+                version = '1.0-SNAPSHOT'
+                groupId = group
+                artifactId = 'simple-mobile-app'
                 from components.java
-                artifact("$buildDir/libs/$artifactId.jar")
             }
         }
     }
 
-    artifactoryPublish {
+    /* artifactoryPublish {
         publications(publishing.publications.pluginArtifact)
         properties {
             simpleFile '**:**:**:*@*', simpleFile: 'only on settings file'
         }
-    }
+    } */
 
