@@ -2,5 +2,5 @@ version: '3'
 services:
   mobileProject:
     build: .
-    image: techsathya/simple-mobile-app
+    image: simple-mobile-app
     container_name: simple-mobile-app

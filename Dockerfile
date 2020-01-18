@@ -1,8 +1,19 @@
 FROM dockiran/kubuntu
-RUN mkdir $HOME/simple-mobile-app
-RUN ls -ltr $HOME/simple-mobile-app
-RUN pwd
-RUN cp ./build/libs/simple-mobile-app.jar $HOME/simple-mobile-app/
+ARG VERSION='1.0-SNAPSHOT'
+ARG APPNAME='simple-mobile-app'
+
+RUN mkdir -p $HOME/${APPNAME}
+COPY runMobileApp.sh /root/simple-mobile-app/
+RUN chmod u+x $HOME/${APPNAME}/runMobileApp.sh
+RUN ls -ltr $HOME/${APPNAME}
+RUN \
+  apt -y update && \
+  apt -y upgrade && \
+  apt -y install curl
+RUN curl --version
+RUN curl -u username:pwd \
+http://docker.for.mac.localhost:8081/artifactory/gradle-dev-local/mobile/customers/data/${APPNAME}/${VERSION}/${APPNAME}-${VERSION}.jar \
+--output $HOME/${APPNAME}/${APPNAME}-${VERSION}.jar
 RUN apt-get -y update
 RUN \
   apt-get -y update && \
@@ -13,7 +24,11 @@ RUN \
   rm -rf /var/cache/oracle-jdk8-installer && \
   java -version
 
-ENV JAVA_HOME /usr/src/java7
-RUN echo "Listing $HOME/simple-mobile-app"
-RUN ls -ltr $HOME/simple-mobile-app/simple-mobile-app.jar
-RUN java -cp $HOME/simple-mobile-app/simple-mobile-app.jar mobile.customers.data.mobileProject
+ENV JAVA_HOME /usr/bin/java
+ENV VERSION ${VERSION}
+ENV APPNAME ${APPNAME}
+
+RUN echo "Listing $HOME/${APPNAME}"
+RUN ls -ltr $HOME/${APPNAME}/${APPNAME}-${VERSION}.jar
+
+ENTRYPOINT $HOME/${APPNAME}/runMobileApp.sh
