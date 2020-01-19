@@ -2,6 +2,7 @@
 
 pipeline {
     agent any
+    currentBuild.result = "SUCCESS"
     try {
         stages {
             stage('Checkout') {
@@ -25,5 +26,15 @@ pipeline {
                 }
             }
         }
+    }
+    catch (err) {
+        currentBuild.result = "FAILURE"
+
+            mail body: "Mobile project build error is here: ${env.BUILD_URL}" ,
+            from: 'jenkinsci@gmail.com',
+            replyTo: 'techsathya77@gmail.com',
+            subject: 'Mobile Project build failed',
+            to: 'techsathya77@gmail.com'
+        throw err
     }
 }
