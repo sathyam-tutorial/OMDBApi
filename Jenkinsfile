@@ -1,18 +1,28 @@
 #!groovy
 
-node('node') {
+pipeline {
+    agent any
     try {
-        stage('Checkout') {
-            checkout scm
-        }
+        stages {
+            stage('Checkout') {
+                steps {
+                    triggers {
+                        cron(env.BRANCH_NAME == 'customer-mobile-feature' ? 'H */12 * * *' : '')
+                      }
+                    checkout scm
+                }
+            }
 
-        withCredentials([usernamePassword(credentialsId: 'MyArtifactory', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
             stage('Gradle Build') {
-                sh '''
-                     set +x
-                     echo "Running Gradle Build"
-                     ./gradle -b build.gradle -PUSERNAME=$USERNAME -PPASSWORD=$PASSWORD jar artifactoryPublish
-                '''
+                withCredentials([usernamePassword(credentialsId: 'MyArtifactory', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    steps {
+                        sh '''
+                             set +x
+                             echo "Running Gradle Build"
+                             ./gradle -b build.gradle -PUSERNAME=$USERNAME -PPASSWORD=$PASSWORD jar artifactoryPublish
+                        '''
+                    }
+                }
             }
         }
     }
