@@ -21,6 +21,7 @@ allprojects {
     groupId = group
     artifactId = 'simple-mobile-app'
 } */
+
     jar{
         group = 'mobile.customers.data'
         version = '1.0-SNAPSHOT'
@@ -51,8 +52,8 @@ allprojects {
             repository {
                 repoKey = 'gradle-dev-local'
                 url = "http://localhost:8081/artifactory/gradle-dev-local"
-                username = "myUser"
-                password = "mypwd"
+                username = "$USERNAME"
+                password = "$PASSWORD"
                 maven = false
                 ivy {
                     ivyLayout = '[organization]/[artifactId]/ivy-[version].xml'
@@ -68,8 +69,8 @@ allprojects {
             repository {
                 repoKey = 'gradle-dev'
                 url = "http://localhost:8081/artifactory/gradle-dev"
-                username = "myUser"
-                password = "mypwd"
+                username = "$USERNAME"
+                password = "$PASSWORD"
                 maven = false
                 ivy {
                     ivyLayout = '[organization]/[artifactId]/ivy-[version].xml'
