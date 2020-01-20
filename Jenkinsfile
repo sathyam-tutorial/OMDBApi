@@ -6,8 +6,8 @@ pipeline {
             pollSCM '*/10 * * * *'
         }
         tools {
-            gradle 'Gradle-6.0.1'
-            jdk 'JDK-1.8.0.211'
+            gradle "Gradle-6.0.1"
+            jdk "JDK-1.8.0.211"
         }
 
         stages {
@@ -23,7 +23,7 @@ pipeline {
                         sh '''
                              set +x
                              echo "Running Gradle Build"
-                             $gradle/gradle -b build.gradle -PUSERNAME=$USERNAME -PPASSWORD=$PASSWORD jar artifactoryPublish
+                             gradle -b build.gradle -PUSERNAME=$USERNAME -PPASSWORD=$PASSWORD jar artifactoryPublish
                         '''
                     }
                 }
