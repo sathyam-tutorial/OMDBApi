@@ -13,8 +13,8 @@ pipeline {
             }
 
             stage('Gradle Build') {
-                withCredentials([usernamePassword(credentialsId: 'MyArtifactory', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    steps {
+                steps {
+                    withCredentials([usernamePassword(credentialsId: 'MyArtifactory', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                         sh '''
                              set +x
                              echo "Running Gradle Build"
