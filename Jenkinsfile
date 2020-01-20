@@ -6,7 +6,7 @@ pipeline {
             stage('Checkout') {
                 steps {
                     triggers {
-                        cron(env.BRANCH_NAME == 'customer-mobile-feature' ? 'H */12 * * *' : '')
+                        cron(env.BRANCH_NAME == 'customer-mobile-feature' ? '*/10 * * * *' : '')
                       }
                     checkout scm
                 }
