@@ -14,11 +14,12 @@ pipeline {
 
             stage('Gradle Build') {
                 steps {
+                    def gradle = tool 'Gradle-6.0.1'
                     withCredentials([usernamePassword(credentialsId: 'MyArtifactory', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                         sh '''
                              set +x
                              echo "Running Gradle Build"
-                             ./gradle -b build.gradle -PUSERNAME=$USERNAME -PPASSWORD=$PASSWORD jar artifactoryPublish
+                             $gradle/gradle -b build.gradle -PUSERNAME=$USERNAME -PPASSWORD=$PASSWORD jar artifactoryPublish
                         '''
                     }
                 }
