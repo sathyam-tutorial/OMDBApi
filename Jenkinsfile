@@ -2,12 +2,12 @@
 
 pipeline {
     agent any
+        triggers {
+            pollSCM '*/10 * * * *'
+        }
         stages {
             stage('Checkout') {
                 steps {
-                    triggers {
-                        cron(env.BRANCH_NAME == 'customer-mobile-feature' ? '*/10 * * * *' : '')
-                      }
                     checkout scm
                 }
             }
