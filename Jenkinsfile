@@ -5,6 +5,11 @@ pipeline {
         triggers {
             pollSCM '*/10 * * * *'
         }
+        tools {
+            gradle 'Gradle-6.0.1'
+            jdk 'JDK-1.8.0.211'
+        }
+
         stages {
             stage('Checkout') {
                 steps {
@@ -14,7 +19,6 @@ pipeline {
 
             stage('Gradle Build') {
                 steps {
-                    def gradle = tool 'Gradle-6.0.1'
                     withCredentials([usernamePassword(credentialsId: 'MyArtifactory', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                         sh '''
                              set +x
