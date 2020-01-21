@@ -23,13 +23,14 @@ pipeline {
                 }
             }
 
-            stage('Docker Build') {
+            stage('Docker Build and Tag') {
                 steps {
                     withCredentials([usernamePassword(credentialsId: 'MyArtifactory', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     sh '''
                         set +x
                         echo "Running Docker Compose Build"
                         docker-compose build
+                        docker tag simple-mobile-app techsathya/simple-mobile-app:latest
                     '''
                     }
                 }
