@@ -11,12 +11,6 @@ pipeline {
         }
 
         stages {
-            stage('Checkout') {
-                steps {
-                    checkout scm
-                }
-            }
-
             stage('Gradle Build and Artifactory upload') {
                 steps {
                     withCredentials([usernamePassword(credentialsId: 'MyArtifactory', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
