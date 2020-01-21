@@ -41,7 +41,7 @@ pipeline {
                         sh '''
                         set +x
                         echo "Uploading image to Docker Registry"
-                        docker push techsathya/simple-mobile-app:1.0-SNAPSHOT
+                        docker push techsathya/simple-mobile-app:latest
                         '''
                     }
                 }
