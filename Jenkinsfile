@@ -42,6 +42,7 @@ pipeline {
                         sh '''
                         set +x
                         echo "Uploading image to Docker Registry"
+                        docker login -u $USERNAME -p $PASSWORD hub.docker.com:443
                         docker push techsathya/simple-mobile-app:latest
                         '''
                     }
