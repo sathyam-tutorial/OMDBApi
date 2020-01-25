@@ -1,26 +1,26 @@
 buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release"
 
+    }
+}
+apply plugin: "com.jfrog.artifactory"
+
+allprojects {
+    apply plugin: "java"
+    apply plugin: 'maven-publish'
     repositories {
         jcenter()
     }
     dependencies {
         //Check for the latest version here: http://plugins.gradle.org/plugin/com.jfrog.artifactory
-        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4+"
+        //classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4+"
+        testCompile 'junit:junit:4.12'
     }
 }
-
-allprojects {
-    apply plugin: "java"
-    apply plugin: 'maven-publish'
-    apply plugin: "com.jfrog.artifactory"
-}
-
-/* ext {
-    group = 'mobile.customers.data'
-    apiversion = '1.0-SNAPSHOT'
-    groupId = group
-    artifactId = 'simple-mobile-app'
-} */
 
     jar{
         group = 'mobile.customers.data'
@@ -45,7 +45,7 @@ allprojects {
         }
     }
 
-    artifactory {
+     artifactory {
         contextUrl = "http://localhost:8081/artifactory"   //The base Artifactory URL if not overridden by the publisher/resolver
 
     publish {
@@ -82,7 +82,7 @@ allprojects {
 
     }
 
-    publishing {
+     publishing {
         publications {
             mavenJava(MavenPublication) {
                 group = 'mobile.customers.data'
