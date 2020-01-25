@@ -8,7 +8,7 @@ public class mobileProjectTest {
     public void test_by_adding_new_contact() {
         mobileProject addNewContact = new mobileProject();
         Contact myContact = new Contact();
-        String name = "trishan";
+        String name = "Rocky";
         String number = "9876552";
 
         myContact.storeContact(name, number);
